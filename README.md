@@ -8,8 +8,7 @@ src/main/java/com/ecommerce/
 ├── security/              # Xác thực và phân quyền
 └── features/              # Các feature chính (tổ chức theo domain)
     ├── auth/              # Xác thực người dùng
-    ├── users/             # Quản lý người dùng
-    ├── addresses/         # Quản lý địa chỉ
+    ├── users/             # Quản lý người dùng 
     ├── shops/             # Quản lý cửa hàng
     ├── categories/        # Quản lý danh mục
     ├── products/          # Quản lý sản phẩm
