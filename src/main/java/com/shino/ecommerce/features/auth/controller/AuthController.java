@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.shino.ecommerce.features.auth.dto.request.ForgotPasswordRequest;
 import com.shino.ecommerce.features.auth.dto.request.LoginRequest;
 import com.shino.ecommerce.features.auth.dto.request.RegisterRequest;
+import com.shino.ecommerce.features.auth.dto.request.ResetPasswordRequest;
 import com.shino.ecommerce.features.auth.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -47,6 +49,26 @@ public class AuthController {
             @RequestParam String email,
             @RequestParam String otp) {
         String result = authService.verifyOTPAndLogin(email, otp);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/forgot-password/send-otp")
+    public ResponseEntity<String> sendOTPForgetPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        String result = authService.sendOTPForgetPassword(forgotPasswordRequest);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/forgot-password/verify-otp")
+    public ResponseEntity<String> verifyOTPAndForgetPassword(
+            @RequestParam String email,
+            @RequestParam String otp) {
+        String result = authService.verifyOTPAndForgetPassword(email, otp);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        String result = authService.resetPassword(resetPasswordRequest);
         return ResponseEntity.ok(result);
     }
 }

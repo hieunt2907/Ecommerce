@@ -64,5 +64,4 @@ public class RegisterRequest {
     public void setStatus(StatusEnum status) {
         this.status = status;
     }    
-
 }

@@ -2,8 +2,11 @@ package com.shino.ecommerce.features.auth.service;
 
 import org.springframework.stereotype.Service;
 
+
+import com.shino.ecommerce.features.auth.dto.request.ForgotPasswordRequest;
 import com.shino.ecommerce.features.auth.dto.request.LoginRequest;
 import com.shino.ecommerce.features.auth.dto.request.RegisterRequest;
+import com.shino.ecommerce.features.auth.dto.request.ResetPasswordRequest;
 import com.shino.ecommerce.features.auth.entity.AuthEntity;
 import com.shino.ecommerce.features.auth.mapper.RegisterMapper;
 import com.shino.ecommerce.features.auth.repository.AuthRepository;
@@ -106,5 +109,65 @@ public class AuthServiceImpl implements AuthService {
             }
         }
         return "Invalid OTP";
+
+        
     }
+
+    @Override
+    public String sendOTPForgetPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        try {
+            AuthEntity authEntity = authRepository.findByEmail(forgotPasswordRequest.getEmail());
+            if (authEntity == null) {
+                return "User not found";
+            }
+            String otp = otpService.generateOTP();
+            otpService.saveOTP(forgotPasswordRequest.getEmail(), otp);
+            emailService.sendVerificationEmail(forgotPasswordRequest.getEmail(), otp);
+            
+            return "OTP sent successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to send OTP";
+        }
+    }
+
+    @Override
+    public String verifyOTPAndForgetPassword(String email, String otp) {
+        if (otpService.validateOTP(email, otp)) {
+            try {
+                AuthEntity authEntity = authRepository.findByEmail(email);
+                if (authEntity == null) {
+                    return "User not found";
+                }
+                // Perform password reset logic here
+                return "Now you can reset your password";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "You can not reset your password";
+            }
+        }
+        return "Invalid OTP";
+    }
+
+    @Override
+    public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        try {
+            AuthEntity authEntity = authRepository.findByEmail(resetPasswordRequest.getEmail());
+            if (authEntity == null) {
+                return "User not found";
+            }
+            if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+                return "Passwords do not match";
+            }
+            String hashedPassword = hashPassword.hashPassword(resetPasswordRequest.getNewPassword());
+            authEntity.setPassword(hashedPassword);
+            authRepository.save(authEntity);
+            return "Password reset successful";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to reset password";
+        }
+    }
+
+    
 }
