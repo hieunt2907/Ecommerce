@@ -2,12 +2,11 @@ package com.shino.ecommerce.features.auth.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Index;
+
 import com.shino.ecommerce.features.auth.enums.RoleEnum;
 import com.shino.ecommerce.features.auth.enums.StatusEnum;
-import com.shino.ecommerce.security.EncryptDecryptConverter;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "auth")
+@Table(name = "auth", indexes = { @Index(name = "idx_username", columnList = "username"),
+        @Index(name = "idx_email", columnList = "email") })
+
 public class AuthEntity {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -23,7 +24,6 @@ public class AuthEntity {
     @Column(unique = true, nullable = false)
     private String username;
     @Column(unique = true, nullable = false)
-    @Convert(converter = EncryptDecryptConverter.class)
     private String email;
     private String password;
     @Enumerated(jakarta.persistence.EnumType.STRING)
