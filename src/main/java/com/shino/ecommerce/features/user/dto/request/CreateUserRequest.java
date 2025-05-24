@@ -1,27 +1,10 @@
-package com.shino.ecommerce.features.user.entity;
+package com.shino.ecommerce.features.user.dto.request;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import com.shino.ecommerce.features.auth.entity.AuthEntity;
 import com.shino.ecommerce.features.user.enums.GenderEnum;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "user")
-public class UserEntity {
-    @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private Long id;
-    @OneToOne
-    @JoinColumn(name = "auth_id", referencedColumnName = "id")
-    private AuthEntity auth;
+public class CreateUserRequest {
     private String name;
     private GenderEnum gender;
     private LocalDate dateOfBirth;
@@ -32,24 +15,6 @@ public class UserEntity {
     private String state;
     private String country;
     private String zipCode;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public AuthEntity getAuth() {
-        return auth;
-    }
-
-    public void setAuth(AuthEntity auth) {
-        this.auth = auth;
-    }
 
     public String getName() {
         return name;
@@ -129,22 +94,6 @@ public class UserEntity {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
 }
