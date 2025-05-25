@@ -14,7 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "auth", indexes = { @Index(name = "idx_username", columnList = "username"),
+@Table(name = "account", indexes = { @Index(name = "idx_username", columnList = "username"),
         @Index(name = "idx_email", columnList = "email") })
 
 public class AuthEntity {

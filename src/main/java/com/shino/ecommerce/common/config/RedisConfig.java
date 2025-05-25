@@ -1,4 +1,4 @@
-package com.shino.ecommerce.config;
+package com.shino.ecommerce.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

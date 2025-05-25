@@ -2,12 +2,12 @@ package com.shino.ecommerce.features.user.dto.response;
 
 public class CreateUserResponse {
     private String message;
-    private String userId;
+    private Long userId;
 
     public CreateUserResponse() {
     }
 
-    public CreateUserResponse(String message, String userId) {
+    public CreateUserResponse(String message, Long userId) {
         this.message = message;
         this.userId = userId;
     }
@@ -20,11 +20,11 @@ public class CreateUserResponse {
         this.message = message;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     } 
 

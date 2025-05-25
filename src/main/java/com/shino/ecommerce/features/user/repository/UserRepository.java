@@ -11,9 +11,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     
     // Method to find a user by their auth ID
     UserEntity findByAuthId(Long authId);
-    
-    // Method to find a user by their email
-    UserEntity findByAuthEmail(String email);
+
     
     // Method to check if a user exists by their auth ID
     boolean existsByAuthId(Long authId);

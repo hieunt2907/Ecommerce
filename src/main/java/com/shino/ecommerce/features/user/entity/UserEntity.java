@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 
 import com.shino.ecommerce.features.auth.entity.AuthEntity;
 import com.shino.ecommerce.features.user.enums.GenderEnum;
+import com.shino.ecommerce.security.EncryptDecryptConverter;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -14,7 +18,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -23,8 +27,10 @@ public class UserEntity {
     @JoinColumn(name = "auth_id", referencedColumnName = "id")
     private AuthEntity auth;
     private String name;
+    @Enumerated(EnumType.STRING)
     private GenderEnum gender;
     private LocalDate dateOfBirth;
+    @Convert(converter = EncryptDecryptConverter.class)
     private String citizenCard;
     private String phoneNumber;
     private String address;

@@ -11,6 +11,7 @@ import com.shino.ecommerce.features.auth.entity.AuthEntity;
 import com.shino.ecommerce.features.auth.mapper.RegisterMapper;
 import com.shino.ecommerce.features.auth.repository.AuthRepository;
 import com.shino.ecommerce.features.auth.utils.HashPassword;
+import com.shino.ecommerce.features.auth.utils.JwtToken;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final RegisterMapper registerMapper;
     private final Map<String, RegisterRequest> tempRegisterStorage = new HashMap<>();
     private final HashPassword hashPassword;
+    private final JwtToken jwtToken;
 
     @Override
     public String sendOTPRegister(RegisterRequest registerRequest) {
@@ -39,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
 
             String otp = otpService.generateOTP();
             otpService.saveOTP(registerRequest.getEmail(), otp);
-            emailService.sendVerificationEmail(registerRequest.getEmail(), otp);
+            emailService.sendVerificationEmailAsync(registerRequest.getEmail(), otp);
             
             tempRegisterStorage.put(registerRequest.getEmail(), registerRequest);
             
@@ -84,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
             }
             String otp = otpService.generateOTP();
             otpService.saveOTP(loginRequest.getEmail(), otp);
-            emailService.sendVerificationEmail(loginRequest.getEmail(), otp);
+            emailService.sendVerificationEmailAsync(loginRequest.getEmail(), otp);
             
             return "OTP sent successfully";
         } catch (Exception e) {
@@ -102,7 +104,10 @@ public class AuthServiceImpl implements AuthService {
                     return "User not found";
                 }
                 // Perform login logic here, e.g., generate JWT token
-                return "Login successful";
+                // For simplicity, we just return a success message
+                // In a real application, you would generate a JWT token here
+                String token = jwtToken.generateToken(authEntity);
+                return "Login successful, token: " + token;
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Login failed";
@@ -122,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
             }
             String otp = otpService.generateOTP();
             otpService.saveOTP(forgotPasswordRequest.getEmail(), otp);
-            emailService.sendVerificationEmail(forgotPasswordRequest.getEmail(), otp);
+            emailService.sendVerificationEmailAsync(forgotPasswordRequest.getEmail(), otp);
             
             return "OTP sent successfully";
         } catch (Exception e) {
