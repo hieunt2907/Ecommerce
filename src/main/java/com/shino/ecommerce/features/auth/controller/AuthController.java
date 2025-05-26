@@ -53,7 +53,8 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password/send-otp")
-    public ResponseEntity<String> sendOTPForgetPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<String> sendOTPForgetPassword(
+            @Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         String result = authService.sendOTPForgetPassword(forgotPasswordRequest);
         return ResponseEntity.ok(result);
     }

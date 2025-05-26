@@ -22,7 +22,7 @@ public class RegisterRequest {
     @Email(message = "Email should be valid")
     private String email;
 
-    private RoleEnum role = RoleEnum.USER;
+    private RoleEnum role = RoleEnum.ROLE_USER;
     private StatusEnum status = StatusEnum.ACTIVE;
 
     public String getUsername() {
