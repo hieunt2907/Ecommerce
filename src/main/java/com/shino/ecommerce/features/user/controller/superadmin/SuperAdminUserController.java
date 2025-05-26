@@ -1,4 +1,4 @@
-package com.shino.ecommerce.features.user.controller.admin;
+package com.shino.ecommerce.features.user.controller.superadmin;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/admin/user")
-public class AdminUserController {
+@RequestMapping("/api/superadmin/user")
+public class SuperAdminUserController {
     private UserService userService;
 
-    public AdminUserController(UserService userService) {
+    public SuperAdminUserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+    public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
         try {
             CreateUserResponse response = userService.createUser(createUserRequest);
-            return ResponseEntity.ok("User created successfully: " + response.getMessage());
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(new CreateUserResponse("Failed to create user: " + e.getMessage(), null));
@@ -59,7 +59,6 @@ public class AdminUserController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest, Long id) {
         try {
-            // Assuming the user ID is part of the update request
             return ResponseEntity.ok(userService.updateUser(id, updateUserRequest));
         } catch (Exception e) {
             e.printStackTrace();

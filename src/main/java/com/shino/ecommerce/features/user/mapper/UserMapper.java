@@ -57,6 +57,7 @@ public class UserMapper {
         userEntity.setState(updateUserRequest.getState());
         userEntity.setCountry(updateUserRequest.getCountry());
         userEntity.setZipCode(updateUserRequest.getZipCode());
+        userEntity.setUpdatedAt(LocalDateTime.now());
         return userEntity;
     }
 }

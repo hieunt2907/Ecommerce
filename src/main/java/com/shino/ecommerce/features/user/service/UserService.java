@@ -14,4 +14,6 @@ public interface UserService {
     UserEntity getUserById(Long id);
     UserEntity updateUser(Long id, UpdateUserRequest updateUserRequest);
     UserEntity deleteUser(Long id);
+    UserEntity getCurrentUserProfile();
+    UserEntity updateCurrentUserProfile(UpdateUserRequest updateUserRequest);
 }
