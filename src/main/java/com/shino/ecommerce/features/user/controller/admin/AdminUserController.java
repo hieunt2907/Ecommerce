@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/user")
 public class AdminUserController {
     private UserService userService;
 
