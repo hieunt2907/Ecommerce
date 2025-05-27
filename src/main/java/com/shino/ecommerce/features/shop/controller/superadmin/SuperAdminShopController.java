@@ -1,4 +1,4 @@
-package com.shino.ecommerce.features.shop.controller.admin;
+package com.shino.ecommerce.features.shop.controller.superadmin;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/shop")
-public class AdminShopController {
+@RequestMapping("/api/superadmin/shop")
+public class SuperAdminShopController {
     private final ShopService shopService;
 
     @GetMapping("/all")

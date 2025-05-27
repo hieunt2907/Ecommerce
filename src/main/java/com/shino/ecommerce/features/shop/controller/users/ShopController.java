@@ -1,6 +1,7 @@
 package com.shino.ecommerce.features.shop.controller.users;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,14 +15,14 @@ import com.shino.ecommerce.features.shop.entity.ShopEntity;
 import com.shino.ecommerce.features.shop.service.ShopService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users/shop")
 public class ShopController {
     private final ShopService shopService;
-    public ShopController(ShopService shopService) {
-        this.shopService = shopService;
-    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createShop(@Valid @RequestBody ShopCreateRequest shopCreateRequest) {
         try {
@@ -64,6 +65,21 @@ public class ShopController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to update shop: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteShop() {
+        try {
+            ShopEntity deleted = shopService.deleteCurrentUserShopProfile();
+            if (deleted == null) {
+                return ResponseEntity.ok("Shop deleted successfully");
+            } else {
+                return ResponseEntity.status(404).body("Shop not found for the current user");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to delete shop: " + e.getMessage());
         }
     }
 

@@ -1,6 +1,6 @@
 package com.shino.ecommerce.features.auth.messaging.consumer;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.shino.ecommerce.features.auth.dto.EmailMessageDTO;
@@ -14,8 +14,8 @@ public class EmailConsumer {
 
     private final EmailService emailService;
 
-    @RabbitListener(queues = "${spring.rabbitmq.queue}")
-    public void consumeMessage(EmailMessageDTO emailMessage) {
+    @KafkaListener(topics = "${spring.kafka.topic.email}", groupId = "email-group")
+    public void consume(EmailMessageDTO emailMessage) {
         emailService.sendEmail(emailMessage.getTo(), emailMessage.getSubject(), emailMessage.getText());
     }
 }

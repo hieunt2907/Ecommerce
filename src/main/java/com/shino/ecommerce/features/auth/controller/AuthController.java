@@ -14,15 +14,13 @@ import com.shino.ecommerce.features.auth.dto.request.ResetPasswordRequest;
 import com.shino.ecommerce.features.auth.service.AuthService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/register/send-otp")
     public ResponseEntity<String> sendOTP(@Valid @RequestBody RegisterRequest registerRequest) {

@@ -15,15 +15,13 @@ import com.shino.ecommerce.features.user.service.UserService;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/superadmin/user")
 public class SuperAdminUserController {
-    private UserService userService;
-
-    public SuperAdminUserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @PostMapping("/create")
     public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {

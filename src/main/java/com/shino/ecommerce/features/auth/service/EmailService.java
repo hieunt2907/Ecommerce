@@ -1,7 +1,7 @@
 package com.shino.ecommerce.features.auth.service;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -26,16 +26,13 @@ public class EmailService {
     @Value("${spring.mail.password}")
     private String mailPassword;
 
-    @Value("${spring.rabbitmq.exchange}")
-    private String exchange;
+    @Value("${spring.kafka.topic.email}")
+    private String emailTopic;
 
-    @Value("${spring.rabbitmq.routingkey}")
-    private String routingkey;
+    private final KafkaTemplate<String, EmailMessageDTO> kafkaTemplate;
 
-    private final RabbitTemplate rabbitTemplate;
-
-    public EmailService(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
+    public EmailService(KafkaTemplate<String, EmailMessageDTO> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public JavaMailSender getJavaMailSender() {
@@ -83,7 +80,7 @@ public class EmailService {
 
     public void sendEmailAsync(String to, String subject, String text) {
         EmailMessageDTO emailMessage = new EmailMessageDTO(to, subject, text);
-        rabbitTemplate.convertAndSend(exchange, routingkey, emailMessage);
+        kafkaTemplate.send(emailTopic, emailMessage);
     }
 
     public void sendVerificationEmailAsync(String to, String verificationCode) {

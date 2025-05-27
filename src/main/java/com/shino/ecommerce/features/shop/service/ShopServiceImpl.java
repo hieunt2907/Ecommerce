@@ -1,5 +1,7 @@
 package com.shino.ecommerce.features.shop.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.shino.ecommerce.core.GetCurrentUser;
@@ -122,6 +124,35 @@ public class ShopServiceImpl implements ShopService{
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("Failed to update current user shop profile", e);
+        }
+    }
+
+    @Override
+    public ShopEntity deleteCurrentUserShopProfile() {
+        try {
+            AuthEntity currentUser = getCurrentUser.getCurrentUser();
+            if (currentUser == null) {
+                throw new IllegalStateException("User not authenticated");
+            }
+            ShopEntity existingShop = shopRepository.findByAuthId(currentUser.getId());
+            if (existingShop != null) {
+                shopRepository.delete(existingShop);
+                return existingShop; // Return the deleted entity
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Failed to delete current user shop profile", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ShopEntity> getAllShop() {
+        try {
+            return shopRepository.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Failed to retrieve all shops", e);
         }
     }
 

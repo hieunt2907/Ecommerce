@@ -38,7 +38,13 @@ public class ShopMapper {
     }
 
     public ShopEntity toEntity(ShopUpdateRequest shopUpdateRequest) {
+        AuthEntity currentUser = getCurrentUser.getCurrentUser();
         ShopEntity shopEntity = new ShopEntity();
+        if (currentUser != null) {
+            AuthEntity authEntity = new AuthEntity();
+            authEntity.setId(currentUser.getId());
+            shopEntity.setAuth(authEntity);
+        }
         shopEntity.setShopName(shopUpdateRequest.getShopName());
         shopEntity.setShopDescription(shopUpdateRequest.getShopDescription());
         shopEntity.setLogo_url(shopUpdateRequest.getLogo_url());
