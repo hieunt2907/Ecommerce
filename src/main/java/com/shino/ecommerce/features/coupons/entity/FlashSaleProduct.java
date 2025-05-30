@@ -1,0 +1,47 @@
+package com.shino.ecommerce.features.coupons.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import com.shino.ecommerce.features.product.entity.ProductEntity;
+import com.shino.ecommerce.features.product.entity.ProductVariantEntity;
+
+
+@Entity
+@Table(name = "flash_sale_products")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class FlashSaleProduct {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_id", nullable = false)
+    private FlashSale sale;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductEntity product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "variant_id")
+    private ProductVariantEntity variant;
+
+    @Column(name = "original_price", nullable = false, precision = 12, scale = 2)
+    private Double originalPrice;
+
+    @Column(name = "sale_price", nullable = false, precision = 12, scale = 2)
+    private Double salePrice;
+
+    @Column(name = "quantity_limit")
+    private Integer quantityLimit;
+
+    @Column(name = "sold_quantity")
+    private Integer soldQuantity = 0;
+
+    
+}
