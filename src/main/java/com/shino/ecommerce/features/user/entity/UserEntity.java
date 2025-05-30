@@ -93,7 +93,5 @@ public class UserEntity {
     private List<ReviewEntity> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<WishlistEntity> wishlists;
-
-    
+    private List<WishlistEntity> wishlists;    
 }

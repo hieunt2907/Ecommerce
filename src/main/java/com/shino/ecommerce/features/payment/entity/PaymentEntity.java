@@ -35,7 +35,7 @@ public class PaymentEntity {
     @Column(name = "transaction_id")
     private String transactionId;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false)
     private Double amount;
 
     @Column(length = 3)

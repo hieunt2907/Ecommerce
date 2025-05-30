@@ -33,19 +33,19 @@ public class ProductVariantEntity {
     @Column(unique = true, length = 100)
     private String sku;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false)
     private Double price;
 
-    @Column(name = "compare_price", precision = 12, scale = 2)
+    @Column(name = "compare_price")
     private Double comparePrice;
 
-    @Column(name = "cost_price", precision = 12, scale = 2)
+    @Column(name = "cost_price")
     private Double costPrice;
 
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 
-    @Column(precision = 8, scale = 3)
+    @Column(precision = 8)
     private Double weight;
 
     @Column(length = 100)

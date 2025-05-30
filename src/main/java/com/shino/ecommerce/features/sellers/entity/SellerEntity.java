@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-import org.apache.commons.math3.stat.descriptive.summary.Product;
+import com.shino.ecommerce.features.product.entity.ProductEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.shino.ecommerce.features.user.entity.UserEntity;
@@ -46,7 +46,7 @@ public class SellerEntity {
     @Column(name = "is_verified")
     private Boolean isVerified = false;
 
-    @Column(name = "seller_rating", precision = 3, scale = 2)
+    @Column(name = "seller_rating")
     private Double sellerRating = 0.0;
 
     @Column(name = "total_products")
@@ -67,5 +67,5 @@ public class SellerEntity {
     private List<SellerBankAccount> bankAccounts;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
-    private List<Product> products;
+    private List<ProductEntity> products;
 }

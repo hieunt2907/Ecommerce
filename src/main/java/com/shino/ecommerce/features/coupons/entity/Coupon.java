@@ -34,13 +34,13 @@ public class Coupon {
     @Column(name = "discount_type", nullable = false)
     private DiscountType discountType;
 
-    @Column(name = "discount_value", nullable = false, precision = 12, scale = 2)
+    @Column(name = "discount_value", nullable = false)
     private Double discountValue;
 
-    @Column(name = "minimum_order_amount", precision = 12, scale = 2)
+    @Column(name = "minimum_order_amount")
     private Double minimumOrderAmount = 0.0;
 
-    @Column(name = "maximum_discount_amount", precision = 12, scale = 2)
+    @Column(name = "maximum_discount_amount")
     private Double maximumDiscountAmount;
 
     @Column(name = "usage_limit")

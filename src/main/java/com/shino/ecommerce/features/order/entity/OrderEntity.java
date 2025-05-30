@@ -43,19 +43,19 @@ public class OrderEntity {
     @Column(name = "shipping_status")
     private ShippingStatus shippingStatus = ShippingStatus.PENDING;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false)
     private Double subtotal;
 
-    @Column(name = "shipping_fee", precision = 12, scale = 2)
+    @Column(name = "shipping_fee")
     private Double shippingFee = 0.0;
 
-    @Column(name = "tax_amount", precision = 12, scale = 2)
+    @Column(name = "tax_amount")
     private Double taxAmount = 0.0;
 
-    @Column(name = "discount_amount", precision = 12, scale = 2)
+    @Column(name = "discount_amount")
     private Double discountAmount = 0.0;
 
-    @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "total_amount", nullable = false)
     private Double totalAmount;
 
     @Column(length = 3)

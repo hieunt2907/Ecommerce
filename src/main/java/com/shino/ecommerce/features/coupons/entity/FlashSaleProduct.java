@@ -31,10 +31,10 @@ public class FlashSaleProduct {
     @JoinColumn(name = "variant_id")
     private ProductVariantEntity variant;
 
-    @Column(name = "original_price", nullable = false, precision = 12, scale = 2)
+    @Column(name = "original_price", nullable = false)
     private Double originalPrice;
 
-    @Column(name = "sale_price", nullable = false, precision = 12, scale = 2)
+    @Column(name = "sale_price", nullable = false)
     private Double salePrice;
 
     @Column(name = "quantity_limit")
@@ -43,5 +43,4 @@ public class FlashSaleProduct {
     @Column(name = "sold_quantity")
     private Integer soldQuantity = 0;
 
-    
 }

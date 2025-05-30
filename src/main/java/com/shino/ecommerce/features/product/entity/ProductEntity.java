@@ -58,7 +58,7 @@ public class ProductEntity {
     @Column(unique = true, length = 100)
     private String sku;
 
-    @Column(precision = 8, scale = 3)
+    @Column(precision = 8)
     private Double weight;
 
     @Column(length = 50)

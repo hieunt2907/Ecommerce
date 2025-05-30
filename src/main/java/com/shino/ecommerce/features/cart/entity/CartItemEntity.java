@@ -39,7 +39,7 @@ public class CartItemEntity {
     @Column(nullable = false)
     private Integer quantity = 1;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false)
     private Double price;
 
     @CreationTimestamp

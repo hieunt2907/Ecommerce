@@ -8,12 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-
-    // Custom query methods can be added here if needed
-    // For example, to find a user by email:
-    // Optional<UserEntity> findByEmail(String email);
-
-    // Additional methods for user management can be implemented as needed
-
-    
+    UserEntity findByEmail(String email);
+    UserEntity findByUsername(String username);
+    boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
+    boolean existsByPhoneNumber(String phoneNumber);
 }

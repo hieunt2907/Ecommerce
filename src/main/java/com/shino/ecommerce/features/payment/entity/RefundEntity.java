@@ -30,7 +30,7 @@ public class RefundEntity {
     @JoinColumn(name = "payment_id", nullable = false)
     private PaymentEntity payment;
 
-    @Column(name = "refund_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "refund_amount", nullable = false)
     private Double refundAmount;
 
     @Column(name = "refund_reason", columnDefinition = "TEXT")
