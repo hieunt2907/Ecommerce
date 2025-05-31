@@ -14,14 +14,14 @@ import com.shino.ecommerce.features.product.entity.ProductVariantEntity;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlashSaleProduct {
+public class FlashSaleProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id", nullable = false)
-    private FlashSale sale;
+    private FlashSaleEntity sale;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)

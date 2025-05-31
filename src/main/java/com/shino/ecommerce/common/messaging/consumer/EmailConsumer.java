@@ -1,0 +1,21 @@
+package com.shino.ecommerce.common.messaging.consumer;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+import com.shino.ecommerce.common.messaging.dto.EmailDTO;
+import com.shino.ecommerce.common.messaging.service.EmailService;
+
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
+public class EmailConsumer {
+
+    private final EmailService emailService;
+
+    @RabbitListener(queues = "${rabbitmq.queue.email}")
+    public void consume(EmailDTO emailMessage) {
+        emailService.sendEmail(emailMessage.getTo(), emailMessage.getSubject(), emailMessage.getBody());
+    }
+    
+}

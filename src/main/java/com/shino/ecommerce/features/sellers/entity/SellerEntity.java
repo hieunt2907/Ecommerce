@@ -64,7 +64,7 @@ public class SellerEntity {
 
     // Relationships
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
-    private List<SellerBankAccount> bankAccounts;
+    private List<SellerBankAccountEntity> bankAccounts;
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<ProductEntity> products;

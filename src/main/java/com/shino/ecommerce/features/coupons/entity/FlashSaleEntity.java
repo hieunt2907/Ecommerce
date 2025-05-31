@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlashSale {
+public class FlashSaleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sale_id")
@@ -41,5 +41,5 @@ public class FlashSale {
 
     // Relationships
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
-    private List<FlashSaleProduct> products;
+    private List<FlashSaleProductEntity> products;
 }
