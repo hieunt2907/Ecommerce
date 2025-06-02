@@ -29,8 +29,9 @@ public class SecurityConfig {
                     "/v3/api-docs/**"
                 ).permitAll()
                 .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
-                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
-                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/seller/**").hasRole("SELLER")
+                .requestMatchers("/api/user/**").hasRole("USER")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
