@@ -3,6 +3,7 @@ package com.shino.ecommerce.features.user.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -68,14 +69,6 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-    name = "user_roles",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<RoleEntity> roles;
-
     @Column(name = "is_verified")
     private Boolean isVerified = false;
 
@@ -91,6 +84,15 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
     // Relationships
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+    name = "user_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleEntity> roles;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAddress> addresses;
 
@@ -104,6 +106,6 @@ public class UserEntity {
     private List<ReviewEntity> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<WishlistEntity> wishlists;    
+    private List<WishlistEntity> wishlists;
     
 }

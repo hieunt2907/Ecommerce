@@ -21,4 +21,9 @@ public class GetCurrentUser {
         UserEntity userEntity = getCurrentUser();
         return userEntity.getUserId();
     }
+
+    public String getCurrentUserEmail() {
+        UserEntity userEntity = getCurrentUser();
+        return userEntity.getEmail();
+    }
 }

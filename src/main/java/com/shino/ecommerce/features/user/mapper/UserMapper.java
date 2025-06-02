@@ -8,6 +8,7 @@ import com.shino.ecommerce.features.user.dto.request.UserUpdateRequest;
 import com.shino.ecommerce.features.user.entity.UserEntity;
 
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -38,6 +39,6 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "wishlists", ignore = true)
-    UserEntity toEntity(UserUpdateRequest userUpdateRequest);
-    
+    UserEntity updateEntity(UserUpdateRequest userUpdateRequest, @MappingTarget UserEntity userEntity);
+
 }

@@ -5,9 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.shino.ecommerce.common.messaging.dto.EmailDTO;
 import com.shino.ecommerce.common.messaging.service.EmailService;
-
-import com.shino.ecommerce.features.user.dto.request.UserCreateRequest;
-import com.shino.ecommerce.features.user.dto.request.UserLoginRequest;
 import com.shino.ecommerce.features.user.entity.UserEntity;
 import com.shino.ecommerce.features.user.repository.UserRepository;
 import com.shino.ecommerce.features.user.services.user.Userservice;
@@ -59,16 +56,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse register(OtpVerificationRequest request) {
         try {
             String email = emailSessionUtil.getEmailFromSession(request.getSessionId());
-            UserCreateRequest userCreateRequest = (UserCreateRequest) redisTemplate.opsForValue().get(request.getSessionId());
-            
+            UserCreateRequest userCreateRequest = (UserCreateRequest) redisTemplate.opsForValue()
+                    .get(request.getSessionId());
+
             if (!otpSend.validateOTP(email, request.getOtp())) {
                 throw new RuntimeException("Invalid OTP");
             }
-            
+
             userService.createUser(userCreateRequest);
             redisTemplate.delete(request.getSessionId());
             emailSessionUtil.invalidateSession(request.getSessionId());
-            
+
             return new AuthenticationResponse(request.getSessionId(), "Registration successful");
         } catch (Exception e) {
             throw new RuntimeException("Error during registration: " + e.getMessage(), e);
@@ -118,14 +116,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             if (user == null) {
                 throw new RuntimeException("User not found");
             }
-            
-            String token = jwtUtil.generateToken(user.getUsername(), 
-                user.getRoles().stream().map(role -> role.getRoleName()).toList());
+
+            String token = jwtUtil.generateToken(user.getUsername(),
+                    user.getRoles().stream().map(role -> role.getRoleName()).toList());
+            emailSessionUtil.invalidateSession(request.getSessionId());
             return new LoginResponse(token, "Login successful");
         } catch (Exception e) {
             throw new RuntimeException("Error during login: " + e.getMessage(), e);
         }
     }
+
+
 
     @Override
     public AuthenticationResponse forgotPassword(String email) {
@@ -147,6 +148,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public AuthenticationResponse verifyResetPassword(OtpVerificationRequest otpVerificationRequest) {
+        try {
+            String email = emailSessionUtil.getEmailFromSession(otpVerificationRequest.getSessionId());
+            UserEntity userEntity = userRepository.findByEmail(email);
+            if (!otpSend.validateOTP(email, otpVerificationRequest.getOtp())) {
+                throw new RuntimeException("Invalid OTP");
+            }
+            if (userEntity == null) {
+                throw new RuntimeException("User not found");
+            }
+
+            return new AuthenticationResponse(otpVerificationRequest.getSessionId(),
+                    "Verify request reset rassword successfully");
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error verify reset password" + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public AuthenticationResponse resetPassword(PasswordResetRequest request) {
         try {
             String email = emailSessionUtil.getEmailFromSession(request.getSessionId());
@@ -157,7 +178,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             user.setPasswordHash(hashPassword.hashPassword(request.getNewPassword()));
             userRepository.save(user);
             emailSessionUtil.invalidateSession(request.getSessionId());
-            return new AuthenticationResponse(request.getSessionId(), "Password reset successful");
+            return new AuthenticationResponse(request.getSessionId(), "Password reset successfully");
         } catch (Exception e) {
             throw new RuntimeException("Error resetting password: " + e.getMessage(), e);
         }
@@ -172,8 +193,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         long expirationInSeconds = jwtUtil.getExpirationDurationInSeconds(token);
         tokenBlacklistService.blacklistToken(token, expirationInSeconds);
 
-        return new AuthenticationResponse(null, "Logout successful");
+        return new AuthenticationResponse(null, "Logout successfully");
     }
-
 
 }

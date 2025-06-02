@@ -10,6 +10,7 @@ public interface AuthenticationService {
     AuthenticationResponse requestLogin(UserLoginRequest request);
     LoginResponse login(OtpVerificationRequest request);
     AuthenticationResponse forgotPassword(String email);
+    AuthenticationResponse verifyResetPassword(OtpVerificationRequest otpVerificationRequest);
     AuthenticationResponse resetPassword(PasswordResetRequest request);
     AuthenticationResponse logout(HttpServletRequest request);
 }
