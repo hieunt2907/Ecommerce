@@ -16,4 +16,9 @@ public class GetCurrentUser {
             }
         return null;
     }
+
+    public Long getCurrentUserId() {
+        UserEntity userEntity = getCurrentUser();
+        return userEntity.getUserId();
+    }
 }

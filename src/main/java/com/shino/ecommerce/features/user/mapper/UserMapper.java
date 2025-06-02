@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import com.shino.ecommerce.features.user.dto.request.UserCreateRequest;
+import com.shino.ecommerce.features.user.dto.request.UserUpdateRequest;
 import com.shino.ecommerce.features.user.entity.UserEntity;
 
 import org.mapstruct.Mapping;
@@ -25,4 +26,18 @@ public interface UserMapper {
     @Mapping(target = "wishlists", ignore = true)
     UserEntity toEntity(UserCreateRequest userCreateRequest);
 
+    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "addresses", ignore = true)
+    @Mapping(target = "avatarUrl", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "orders", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
+    @Mapping(target = "seller", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "wishlists", ignore = true)
+    UserEntity toEntity(UserUpdateRequest userUpdateRequest);
+    
 }

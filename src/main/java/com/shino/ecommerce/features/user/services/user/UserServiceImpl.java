@@ -1,6 +1,5 @@
 package com.shino.ecommerce.features.user.services.user;
 
-
 import org.springframework.stereotype.Service;
 
 import com.shino.ecommerce.features.user.dto.request.UserCreateRequest;
@@ -10,6 +9,7 @@ import com.shino.ecommerce.features.user.entity.UserEntity;
 import com.shino.ecommerce.features.user.mapper.UserMapper;
 import com.shino.ecommerce.features.user.repository.UserRepository;
 import com.shino.ecommerce.features.user.utils.HashPassword;
+import com.shino.ecommerce.core.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +19,7 @@ public class UserServiceImpl implements Userservice {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final HashPassword hashPassword;
+    private GetCurrentUser getCurrentUser;
 
     @Override
     public UserResponse createUser(UserCreateRequest userCreateRequest) {
@@ -43,8 +44,23 @@ public class UserServiceImpl implements Userservice {
 
     @Override
     public UserResponse updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+        try {
+            UserEntity userEntity = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Long currenUserId = getCurrentUser.getCurrentUserId();
+            if (isSuperAdmin(userEntity) && !userId.equals(currenUserId)) {
+                throw new RuntimeException("Can not update SUPERADMIN");
+            }
+            userEntity = userMapper.toEntity(userUpdateRequest);
+            userRepository.save(userEntity);
+            return new UserResponse(userEntity, "User update successful");
+        } catch (Exception e) {
+            throw new RuntimeException("Error update user: " + e.getMessage(), e);
+        }
     }
 
+    private boolean isSuperAdmin(UserEntity userEntity) {
+        return userEntity.getRoles().stream()
+                .anyMatch(role -> "SUPERADMIN".equals(role.getRoleName()));
+    }
 }

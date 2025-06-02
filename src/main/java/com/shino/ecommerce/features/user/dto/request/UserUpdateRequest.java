@@ -6,7 +6,6 @@ import java.util.List;
 import com.shino.ecommerce.features.user.entity.RoleEntity;
 import com.shino.ecommerce.features.user.entity.UserEntity.Gender;
 
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,11 +14,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateRequest {
-    @Email(message = "Email should be valid")
-    private String email;
     private String phone;
     private String avartarUrl;
     private LocalDate dateOfBirth;
     private Gender gender;
+    private Boolean isVerified;
+    private Boolean isActive;
     private List<RoleEntity> roles;
 }
