@@ -1,4 +1,4 @@
-package com.shino.ecommerce.features.whislist.entity;
+package com.shino.ecommerce.features.wishlist.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

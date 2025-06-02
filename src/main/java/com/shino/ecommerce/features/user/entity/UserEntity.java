@@ -11,7 +11,7 @@ import com.shino.ecommerce.features.order.entity.OrderEntity;
 import com.shino.ecommerce.features.review.entity.ReviewEntity;
 import com.shino.ecommerce.features.sellers.entity.SellerEntity;
 import com.shino.ecommerce.features.user_address.entity.UserAddress;
-import com.shino.ecommerce.features.whislist.entity.WishlistEntity;
+import com.shino.ecommerce.features.wishlist.entity.WishlistEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
