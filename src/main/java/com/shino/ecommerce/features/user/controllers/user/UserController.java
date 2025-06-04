@@ -1,5 +1,6 @@
 package com.shino.ecommerce.features.user.controllers.user;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/user/")
+@RequestMapping("api/user")
 public class UserController {
-    private Userservice userservice;
+    private final Userservice userservice;
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestParam Long userId, @RequestBody UserUpdateRequest userUpdateRequest) {
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PatchMapping("/changepassword/confirm")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         return ResponseEntity.ok(userservice.changePassword(changePasswordRequest));
     }
 }

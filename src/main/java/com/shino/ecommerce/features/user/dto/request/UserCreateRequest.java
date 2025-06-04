@@ -1,7 +1,7 @@
 package com.shino.ecommerce.features.user.dto.request;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import com.shino.ecommerce.features.user.entity.RoleEntity;
 import com.shino.ecommerce.features.user.entity.UserEntity.Gender;
@@ -20,12 +20,12 @@ public class UserCreateRequest {
     private String username;
     @Email(message = "Email should be valid")
     private String email;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must be at least 8 characters long and contain at least one letter and one number.")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password must be at least 8 characters long and contain at least one letter, one number, and one special character.")
     private String passwordHash;
     private String phone;
     private String avartarUrl;
     private LocalDate dateOfBirth;
     private Gender gender;
-    private List<RoleEntity> roles;
-    
+    private Set<RoleEntity> roles;
+
 }

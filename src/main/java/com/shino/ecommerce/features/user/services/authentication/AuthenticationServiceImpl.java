@@ -39,6 +39,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             if (userRepository.existsByEmailAndUsername(request.getEmail(), request.getUsername())) {
                 throw new RuntimeException("Email or username already exists");
             }
+
+            if (userRepository.existsByPhone(request.getPhone())) {
+                throw new RuntimeException("Phone already exitst");
+            }
             String sessionId = emailSessionUtil.createEmailSession(request.getEmail());
             String otp = otpSend.generateOTP();
             otpSend.saveOTP(request.getEmail(), otp);

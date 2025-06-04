@@ -3,7 +3,6 @@ package com.shino.ecommerce.features.user.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -91,7 +90,7 @@ public class UserEntity {
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<RoleEntity> roles;
+    private List<RoleEntity> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAddress> addresses;

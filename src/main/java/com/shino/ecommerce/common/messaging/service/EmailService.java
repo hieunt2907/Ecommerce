@@ -40,6 +40,7 @@ public class EmailService {
 
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        
         mailSender.setHost(mailHost);
         mailSender.setPort(mailPort);
         mailSender.setUsername(mailUsername);
@@ -55,9 +56,12 @@ public class EmailService {
     }
 
     public void sendEmail(String to, String subject, String text) {
+        if (to == null || to.trim().isEmpty() || !to.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            throw new IllegalArgumentException("Invalid recipient email address: " + to);
+        }
         JavaMailSender mailSender = getJavaMailSender();
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
+        message.setTo(to.trim());
         message.setSubject(subject);
         message.setText(text);
         mailSender.send(message);

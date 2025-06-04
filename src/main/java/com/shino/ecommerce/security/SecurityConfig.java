@@ -28,10 +28,10 @@ public class SecurityConfig {
                     "/swagger-ui.html",
                     "/v3/api-docs/**"
                 ).permitAll()
-                .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/seller/**").hasRole("SELLER")
-                .requestMatchers("/api/user/**").hasRole("USER")
+                .requestMatchers("/api/superadmin/**").hasAuthority("ROLE_SUPERADMIN")
+                .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/seller/**").hasAuthority("ROLE_SELLER")
+                .requestMatchers("/api/user/**").hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

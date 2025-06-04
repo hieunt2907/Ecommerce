@@ -70,13 +70,21 @@ public class UserServiceImpl implements Userservice {
     @Override
     public String requestChangePassword() {
         try {
-            String email = getCurrentUser.getCurrentUserEmail();
+            UserEntity userEntity = getCurrentUser.getCurrentUser();
+            if (userEntity == null) {
+                throw new RuntimeException("No authenticated user found");
+            }
+            String email = userEntity.getEmail();
+            if (email == null) {
+                throw new RuntimeException("User email is not available");
+            }
             String otp = otpSend.generateOTP();
-            EmailDTO emailDTO = new EmailDTO(email, "Otp send successfully", otp);
+            otpSend.saveOTP(email, otp);
+            EmailDTO emailDTO = new EmailDTO(email, "OTP sent successfully", otp);
             emailService.sendEmailAsync(emailDTO);
-            return "OTP send successfully";
+            return "OTP sent successfully";
         } catch (Exception e) {
-            throw new RuntimeException("Erroe request change password");
+            throw new RuntimeException("Error requesting password change: " + e.getMessage(), e);
         }
     }
 

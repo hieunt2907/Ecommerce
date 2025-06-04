@@ -1,7 +1,7 @@
 package com.shino.ecommerce.features.user.dto.request;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import com.shino.ecommerce.features.user.entity.RoleEntity;
 import com.shino.ecommerce.features.user.entity.UserEntity.Gender;
@@ -20,5 +20,5 @@ public class UserUpdateRequest {
     private Gender gender;
     private Boolean isVerified;
     private Boolean isActive;
-    private List<RoleEntity> roles;
+    private Set<RoleEntity> roles;
 }

@@ -6,17 +6,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class EmailSessionUtil {
     private final RedisTemplate<String, String> redisTemplate;
     private static final String EMAIL_SESSION_PREFIX = "email_session:";
     
     @Value("${app.security.email-session-expiration:300}") // 5 minutes default
     private long sessionExpirationSeconds;
-
-    public EmailSessionUtil(RedisTemplate<String, String> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     public String createEmailSession(String email) {
         String sessionId = UUID.randomUUID().toString();
