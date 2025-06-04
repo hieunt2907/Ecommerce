@@ -52,12 +52,19 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<Object, String> redisObjectStringTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<Object, String> template = new RedisTemplate<>();
+    public RedisTemplate<String, Boolean> redisBooleanTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Boolean> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
+
+        // Key là String
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+
+        // Value là Boolean → dùng GenericJackson2JsonRedisSerializer hoặc JdkSerializationRedisSerializer
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        template.afterPropertiesSet();
         return template;
     }
-
 }

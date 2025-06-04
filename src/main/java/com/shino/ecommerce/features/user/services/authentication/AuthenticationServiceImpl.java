@@ -31,6 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtUtil jwtUtil;
     private final TokenBlacklistService tokenBlacklistService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Boolean> redisBooleanTemplate;
     private final EmailSessionUtil emailSessionUtil;
 
     @Override
@@ -157,11 +158,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String email = emailSessionUtil.getEmailFromSession(otpVerificationRequest.getSessionId());
             UserEntity userEntity = userRepository.findByEmail(email);
             if (!otpSend.validateOTP(email, otpVerificationRequest.getOtp())) {
+                redisBooleanTemplate.opsForValue().set(email, false);
                 throw new RuntimeException("Invalid OTP");
             }
             if (userEntity == null) {
                 throw new RuntimeException("User not found");
             }
+
+            redisBooleanTemplate.opsForValue().set(email, true);
 
             return new AuthenticationResponse(otpVerificationRequest.getSessionId(),
                     "Verify request reset rassword successfully");
@@ -178,6 +182,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             UserEntity user = userRepository.findByEmail(email);
             if (user == null) {
                 throw new RuntimeException("User not found");
+            }
+            if (Boolean.FALSE.equals(redisBooleanTemplate.opsForValue().get(email))) {
+                throw new RuntimeException("Verify request reset password failed");
             }
             user.setPasswordHash(hashPassword.hashPassword(request.getNewPassword()));
             userRepository.save(user);
