@@ -1,22 +1,36 @@
 package com.shino.ecommerce.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
-import jakarta.servlet.http.HttpServletRequest;
-import java.security.Key;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
-    private final String jwtSecret = "your-256-bit-secret-your-256-bit-secret"; // Use at least 256 bits
     private final long jwtExpirationMs = 86400000; // 1 day
+    private final KeyPair keyPair;
 
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    public JwtUtil() {
+        // Generate RSA key pair for RS256
+        this.keyPair = Keys.keyPairFor(SignatureAlgorithm.RS256);
+    }
+
+    private PrivateKey getSigningKey() {
+        return keyPair.getPrivate();
+    }
+
+    private PublicKey getVerificationKey() {
+        return keyPair.getPublic();
     }
 
     public String generateToken(String username, List<String> roles) {
@@ -25,13 +39,13 @@ public class JwtUtil {
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.RS256)
                 .compact();
     }
 
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(getVerificationKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -40,7 +54,7 @@ public class JwtUtil {
 
     public List<String> getRolesFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(getVerificationKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -51,7 +65,7 @@ public class JwtUtil {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(getVerificationKey()).build().parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
@@ -79,10 +93,9 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(getVerificationKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
-    
 }

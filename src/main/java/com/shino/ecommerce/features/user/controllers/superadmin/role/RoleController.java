@@ -1,15 +1,13 @@
 package com.shino.ecommerce.features.user.controllers.superadmin.role;
 
+import com.shino.ecommerce.features.user.dto.request.RoleCreateRequest;
+import com.shino.ecommerce.features.user.services.role.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.shino.ecommerce.features.user.dto.request.RoleCreateRequest;
-import com.shino.ecommerce.features.user.services.role.RoleService;
-
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +21,7 @@ public class RoleController {
             roleService.createRole(roleCreateRequest);
             return ResponseEntity.ok().body("Role created successfully");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error creating role: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

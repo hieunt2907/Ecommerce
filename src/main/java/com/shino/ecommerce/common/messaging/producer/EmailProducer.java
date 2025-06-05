@@ -1,4 +1,4 @@
-package com.shino.ecommerce.common.messaging.service;
+package com.shino.ecommerce.common.messaging.producer;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,7 @@ import com.shino.ecommerce.common.messaging.dto.EmailDTO;
 import java.util.Properties;
 
 @Service
-public class EmailService {
+public class EmailProducer {
     
     @Value("${spring.mail.host}")
     private String mailHost;
@@ -34,7 +34,7 @@ public class EmailService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public EmailService(RabbitTemplate rabbitTemplate) {
+    public EmailProducer(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 

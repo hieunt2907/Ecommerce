@@ -3,7 +3,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import com.shino.ecommerce.common.messaging.dto.EmailDTO;
-import com.shino.ecommerce.common.messaging.service.EmailService;
+import com.shino.ecommerce.common.messaging.producer.EmailProducer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailConsumer {
 
-    private final EmailService emailService;
+    private final EmailProducer emailProducer;
 
     @RabbitListener(queues = "${rabbitmq.queue.email}")
     public void consume(EmailDTO emailMessage) {
-        emailService.sendEmail(emailMessage.getTo(), emailMessage.getSubject(), emailMessage.getBody());
+        emailProducer.sendEmail(emailMessage.getTo(), emailMessage.getSubject(), emailMessage.getBody());
     }
     
 }

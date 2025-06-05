@@ -1,16 +1,15 @@
 package com.shino.ecommerce.features.user.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-
 import com.shino.ecommerce.features.user.dto.request.UserCreateRequest;
 import com.shino.ecommerce.features.user.dto.request.UserUpdateRequest;
 import com.shino.ecommerce.features.user.entity.UserEntity;
-
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 

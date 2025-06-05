@@ -10,7 +10,7 @@ import com.shino.ecommerce.features.user.entity.UserEntity;
 
 import java.util.List;
 
-public interface Userservice {
+public interface UserService {
     UserResponse createUser(UserCreateRequest userCreateRequest);
     UserResponse updateUser(Long userId, UserUpdateRequest updateRequest);
     String requestChangePassword();

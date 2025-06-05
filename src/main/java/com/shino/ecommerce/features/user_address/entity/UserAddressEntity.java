@@ -1,14 +1,12 @@
 package com.shino.ecommerce.features.user_address.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shino.ecommerce.features.user.entity.UserEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
-
-import com.shino.ecommerce.features.user.entity.UserEntity;
-
 
 import java.time.LocalDateTime;
 
@@ -18,12 +16,13 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAddress {
+public class UserAddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
     private Long addressId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -34,9 +33,6 @@ public class UserAddress {
 
     @Column(name = "recipient_name", nullable = false, length = 100)
     private String recipientName;
-
-    @Column(nullable = false, length = 20)
-    private String phone;
 
     @Column(name = "address_line", nullable = false)
     private String addressLine;

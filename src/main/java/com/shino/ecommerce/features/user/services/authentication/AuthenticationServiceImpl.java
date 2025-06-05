@@ -1,33 +1,34 @@
 package com.shino.ecommerce.features.user.services.authentication;
 
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-
 import com.shino.ecommerce.common.messaging.dto.EmailDTO;
-import com.shino.ecommerce.common.messaging.service.EmailService;
+import com.shino.ecommerce.common.messaging.producer.EmailProducer;
+import com.shino.ecommerce.features.user.dto.request.OtpVerificationRequest;
+import com.shino.ecommerce.features.user.dto.request.PasswordResetRequest;
+import com.shino.ecommerce.features.user.dto.request.UserCreateRequest;
+import com.shino.ecommerce.features.user.dto.request.UserLoginRequest;
+import com.shino.ecommerce.features.user.dto.response.AuthenticationResponse;
+import com.shino.ecommerce.features.user.dto.response.LoginResponse;
 import com.shino.ecommerce.features.user.entity.UserEntity;
 import com.shino.ecommerce.features.user.repository.UserRepository;
-import com.shino.ecommerce.features.user.services.user.Userservice;
+import com.shino.ecommerce.features.user.services.user.UserService;
 import com.shino.ecommerce.features.user.utils.EmailSessionUtil;
 import com.shino.ecommerce.features.user.utils.HashPassword;
 import com.shino.ecommerce.features.user.utils.OtpSend;
 import com.shino.ecommerce.security.JwtUtil;
 import com.shino.ecommerce.security.TokenBlacklistService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-
-import com.shino.ecommerce.features.user.dto.response.*;
-import com.shino.ecommerce.features.user.dto.request.*;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final HashPassword hashPassword;
-    private final Userservice userService;
+    private final UserService userService;
     private final OtpSend otpSend;
-    private final EmailService emailService;
+    private final EmailProducer emailProducer;
     private final JwtUtil jwtUtil;
     private final TokenBlacklistService tokenBlacklistService;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -37,19 +38,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse requestRegister(UserCreateRequest request) {
         try {
-            if (userRepository.existsByEmailAndUsername(request.getEmail(), request.getUsername())) {
-                throw new RuntimeException("Email or username already exists");
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new RuntimeException("Email already exists");
             }
-
+            if (userRepository.existsByUsername(request.getUsername())) {
+                throw new RuntimeException("Username already exists");
+            }
             if (userRepository.existsByPhone(request.getPhone())) {
-                throw new RuntimeException("Phone already exitst");
+                throw new RuntimeException("Phone number already exists");
             }
             String sessionId = emailSessionUtil.createEmailSession(request.getEmail());
             String otp = otpSend.generateOTP();
             otpSend.saveOTP(request.getEmail(), otp);
             EmailDTO emailDTO = new EmailDTO(request.getEmail(), "Registration OTP",
                     "Your OTP for registration is: " + otp);
-            emailService.sendEmailAsync(emailDTO);
+            emailProducer.sendEmailAsync(emailDTO);
             redisTemplate.opsForValue().set(sessionId, request);
             return new AuthenticationResponse(sessionId, "OTP sent successfully");
         } catch (Exception e) {
@@ -103,7 +106,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             otpSend.saveOTP(user.getEmail(), otp);
             EmailDTO emailDTO = new EmailDTO(user.getEmail(), "Login OTP",
                     "Your OTP for login is: " + otp);
-            emailService.sendEmailAsync(emailDTO);
+            emailProducer.sendEmailAsync(emailDTO);
             return new AuthenticationResponse(sessionId, "OTP sent successfully");
         } catch (Exception e) {
             throw new RuntimeException("Error requesting login: " + e.getMessage(), e);
@@ -145,7 +148,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             otpSend.saveOTP(email, otp);
             EmailDTO emailDTO = new EmailDTO(email, "Password Reset OTP",
                     "Your OTP for password reset is: " + otp);
-            emailService.sendEmailAsync(emailDTO);
+            emailProducer.sendEmailAsync(emailDTO);
             return new AuthenticationResponse(sessionId, "OTP sent successfully");
         } catch (Exception e) {
             throw new RuntimeException("Error requesting password reset: " + e.getMessage(), e);

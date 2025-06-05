@@ -1,35 +1,45 @@
 package com.shino.ecommerce.features.user.controllers.user;
 
+import com.shino.ecommerce.features.user.dto.request.ChangePasswordRequest;
 import com.shino.ecommerce.features.user.dto.request.OtpVerificationRequest;
+import com.shino.ecommerce.features.user.dto.request.UserUpdateRequest;
+import com.shino.ecommerce.features.user.services.user.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.shino.ecommerce.features.user.dto.request.ChangePasswordRequest;
-import com.shino.ecommerce.features.user.dto.request.UserUpdateRequest;
-import com.shino.ecommerce.features.user.services.user.Userservice;
-
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/user/users")
 public class UserController {
-    private final Userservice userservice;
+    private final UserService userservice;
 
     @PostMapping("/password/request")
-    public ResponseEntity<?> requesetChangePassword() {
-        return ResponseEntity.ok(userservice.requestChangePassword());
+    public ResponseEntity<?> requestChangePassword() {
+        try {
+            return ResponseEntity.ok(userservice.requestChangePassword());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/password/verify")
     public ResponseEntity<?> verifyChangePassword(@RequestParam String otp) {
-        return ResponseEntity.ok(userservice.verifyChangePassword(otp));
+        try {
+            return ResponseEntity.ok(userservice.verifyChangePassword(otp));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/password/confirm")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-        return ResponseEntity.ok(userservice.changePassword(changePasswordRequest));
+        try {
+            return ResponseEntity.ok(userservice.changePassword(changePasswordRequest));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/email/request")
@@ -37,7 +47,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userservice.requestChangeEmail());
         } catch (Exception e) {
-            throw new RuntimeException("Error requesting change email: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -46,7 +56,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userservice.verifyChangeEmail(otp));
         } catch (Exception e) {
-            throw new RuntimeException("Error verify change email: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -55,7 +65,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userservice.changeEmail(email));
         } catch (Exception e) {
-            throw new RuntimeException("Error change email: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -64,7 +74,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userservice.verifyEmail(otpVerificationRequest));
         } catch (Exception e) {
-            throw new RuntimeException("Error confirm email: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -73,7 +83,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userservice.getCurrentUserProfile());
         } catch (Exception e) {
-            throw new RuntimeException("Error getting current user profile: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -83,7 +93,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userservice.updateUserProfile(userUpdateRequest));
         } catch (Exception e) {
-            throw new RuntimeException("Error update user: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

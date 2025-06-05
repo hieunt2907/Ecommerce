@@ -1,7 +1,7 @@
 package com.shino.ecommerce.features.user.services.user;
 
 import com.shino.ecommerce.common.messaging.dto.EmailDTO;
-import com.shino.ecommerce.common.messaging.service.EmailService;
+import com.shino.ecommerce.common.messaging.producer.EmailProducer;
 import com.shino.ecommerce.core.GetCurrentUser;
 import com.shino.ecommerce.features.user.dto.request.ChangePasswordRequest;
 import com.shino.ecommerce.features.user.dto.request.OtpVerificationRequest;
@@ -19,32 +19,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements Userservice {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final HashPassword hashPassword;
     private final GetCurrentUser getCurrentUser;
     private final OtpSend otpSend;
-    private final EmailService emailService;
+    private final EmailProducer emailProducer;
     private final RedisTemplate<String, Boolean> redisBooleanTemplate;
     private final EmailSessionUtil emailSessionUtil;
 
     @Override
     public UserResponse createUser(UserCreateRequest userCreateRequest) {
         try {
-            if (userRepository.existsByEmail(userCreateRequest.getEmail())) {
-                throw new RuntimeException("Email already exists");
-            }
-            if (userRepository.existsByUsername(userCreateRequest.getUsername())) {
-                throw new RuntimeException("Username already exists");
-            }
-            if (userRepository.existsByPhone(userCreateRequest.getPhone())) {
-                throw new RuntimeException("Phone number already exists");
-            }
+
             UserEntity userEntity = userMapper.toEntity(userCreateRequest);
             userEntity.setPasswordHash(hashPassword.hashPassword(userCreateRequest.getPasswordHash()));
             userRepository.save(userEntity);
@@ -87,7 +80,7 @@ public class UserServiceImpl implements Userservice {
             String otp = otpSend.generateOTP();
             otpSend.saveOTP(email, otp);
             EmailDTO emailDTO = new EmailDTO(email, "OTP sent successfully", otp);
-            emailService.sendEmailAsync(emailDTO);
+            emailProducer.sendEmailAsync(emailDTO);
             return "OTP sent successfully";
         } catch (Exception e) {
             throw new RuntimeException("Error requesting password change: " + e.getMessage(), e);
@@ -102,7 +95,7 @@ public class UserServiceImpl implements Userservice {
                 redisBooleanTemplate.opsForValue().set(email, false);
                 throw new RuntimeException("Invalid OTP");
             }
-            redisBooleanTemplate.opsForValue().set(email, true);
+            redisBooleanTemplate.opsForValue().set(email, true, Duration.ofMinutes(5));
             return "Verify change password successfully";
         } catch (Exception e) {
             throw new RuntimeException("Error verify change password" + e.getMessage() + e);
@@ -137,7 +130,7 @@ public class UserServiceImpl implements Userservice {
             String otp = otpSend.generateOTP();
             otpSend.saveOTP(email, otp);
             EmailDTO emailDTO = new EmailDTO(email, "Request Change Email", otp);
-            emailService.sendEmailAsync(emailDTO);
+            emailProducer.sendEmailAsync(emailDTO);
             return "OTP sent successfully";
 
         } catch (Exception e) {
@@ -153,7 +146,7 @@ public class UserServiceImpl implements Userservice {
                 redisBooleanTemplate.opsForValue().set(email, false);
                 throw new RuntimeException("Invalid OTP");
             }
-            redisBooleanTemplate.opsForValue().set(email, true);
+            redisBooleanTemplate.opsForValue().set(email, true, Duration.ofMinutes(5));
             return "Verify change email successfully";
         } catch (Exception e) {
             throw new RuntimeException("Error verify change email" + e.getMessage() + e);
@@ -176,7 +169,7 @@ public class UserServiceImpl implements Userservice {
             otpSend.saveOTP(email, otp);
             EmailDTO emailDTO = new EmailDTO(email, "Verify New Email", otp);
             String sessionId = emailSessionUtil.createEmailSession(email);
-            emailService.sendEmailAsync(emailDTO);
+            emailProducer.sendEmailAsync(emailDTO);
             redisBooleanTemplate.delete(currentEmail);
             return new AuthenticationResponse(sessionId, "OTP sent successfully");
         } catch (Exception e) {
@@ -242,9 +235,24 @@ public class UserServiceImpl implements Userservice {
             if (userEntity == null) {
                 throw new RuntimeException("User not found");
             }
-            if (isSuperAdmin(userEntity)) {
-                throw new RuntimeException("Can not delete SUPERADMIN");
+
+            Long currentUserId = getCurrentUser.getCurrentUserId();
+
+            // Không cho phép user tự xóa chính mình
+            if (userId.equals(currentUserId)) {
+                throw new RuntimeException("Cannot delete yourself");
             }
+
+            // Chỉ SUPERADMIN mới có thể xóa user khác
+            if (!isCurrentUserSuperAdmin()) {
+                throw new RuntimeException("Only SUPERADMIN can delete users");
+            }
+
+            // SUPERADMIN không thể bị xóa
+            if (isSuperAdmin(userEntity)) {
+                throw new RuntimeException("Cannot delete SUPERADMIN");
+            }
+
             userRepository.delete(userEntity);
             return new UserResponse(userEntity, "User delete successful");
         } catch (Exception e) {
@@ -279,7 +287,7 @@ public class UserServiceImpl implements Userservice {
 
     private boolean isSuperAdmin(UserEntity userEntity) {
         return userEntity.getRoles().stream()
-                .anyMatch(role -> "SUPERADMIN".equals(role.getRoleName()));
+                .anyMatch(role -> "ROLE_SUPERADMIN".equals(role.getRoleName()));
     }
 
     private boolean isCurrentUserSuperAdmin() {
