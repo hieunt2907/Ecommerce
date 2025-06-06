@@ -243,10 +243,10 @@ public class UserServiceImpl implements UserService {
                 throw new RuntimeException("Cannot delete yourself");
             }
 
-            // Chỉ SUPERADMIN mới có thể xóa user khác
+            /* Chỉ SUPERADMIN mới có thể xóa user khác
             if (!isCurrentUserSuperAdmin()) {
                 throw new RuntimeException("Only SUPERADMIN can delete users");
-            }
+            }*/
 
             // SUPERADMIN không thể bị xóa
             if (isSuperAdmin(userEntity)) {

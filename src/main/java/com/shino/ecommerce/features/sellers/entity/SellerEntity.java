@@ -1,14 +1,13 @@
 package com.shino.ecommerce.features.sellers.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shino.ecommerce.features.product.entity.ProductEntity;
+import com.shino.ecommerce.features.user.entity.UserEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import com.shino.ecommerce.features.product.entity.ProductEntity;
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.shino.ecommerce.features.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +23,7 @@ public class SellerEntity {
     @Column(name = "seller_id")
     private Long sellerId;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -63,9 +63,11 @@ public class SellerEntity {
     private LocalDateTime lastActive;
 
     // Relationships
+    @JsonIgnore
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<SellerBankAccountEntity> bankAccounts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<ProductEntity> products;
 }

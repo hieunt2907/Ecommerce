@@ -8,4 +8,5 @@ import com.shino.ecommerce.features.user.entity.RoleEntity;
 @Repository
 public interface RoleRepository  extends JpaRepository<RoleEntity, Long>{
     boolean existsByRoleName(String roleName);
+    RoleEntity findByRoleId(Long roleId);
 }

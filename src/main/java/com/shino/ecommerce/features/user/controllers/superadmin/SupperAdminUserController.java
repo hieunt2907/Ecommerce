@@ -1,4 +1,4 @@
-package com.shino.ecommerce.features.user.controllers.superadmin.role;
+package com.shino.ecommerce.features.user.controllers.superadmin;
 
 import com.shino.ecommerce.features.user.dto.request.UserUpdateRequest;
 import com.shino.ecommerce.features.user.services.user.UserService;
