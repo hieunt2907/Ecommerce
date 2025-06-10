@@ -1,6 +1,7 @@
 package com.shino.ecommerce.core;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,9 +11,9 @@ import com.shino.ecommerce.features.user.entity.UserEntity;
 import com.shino.ecommerce.features.user.repository.UserRepository;
 
 @Component
+@RequiredArgsConstructor
 public class GetCurrentUser {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserEntity getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

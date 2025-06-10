@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/superadmin/seller")
-public class SuperAdminController {
+public class SuperAdminSellerController {
     private final SellerService sellerService;
 
     @GetMapping("/all")

@@ -88,4 +88,35 @@ public class SellerServiceImpl implements SellerService {
             throw new RuntimeException("Error deleting seller: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public SellerEntity getCurrentSeller() {
+        try {
+            Long userId = getCurrentUser.getCurrentUserId();
+            SellerEntity sellerEntity = sellerRepository.findByUserId(userId);
+            if (sellerEntity == null) {
+                throw new RuntimeException("Current seller not found");
+            }
+            return sellerEntity;
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting current seller: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public SellerResponse updateCurrentSeller(SellerUpdateRequest sellerUpdateRequest) {
+        try {
+            Long userId = getCurrentUser.getCurrentUserId();
+            SellerEntity sellerEntity = sellerRepository.findByUserId(userId);
+            if (sellerEntity == null) {
+                throw new RuntimeException("Current seller not found");
+            }
+            sellerEntity = sellerMapper.updateEntity(sellerUpdateRequest, sellerEntity);
+
+            sellerRepository.save(sellerEntity);
+            return new SellerResponse(sellerEntity, "Current seller updated successfully");
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating current seller: " + e.getMessage(), e);
+        }
+    }
 }

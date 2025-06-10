@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
-public class SellerController {
+@RequestMapping("/api/user/seller")
+public class UserSellerController {
     private final SellerService sellerService;
 
     @PostMapping("/create")

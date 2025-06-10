@@ -17,4 +17,8 @@ public interface SellerService {
     SellerResponse updateSeller(Long sellerId, SellerUpdateRequest sellerUpdateRequest);
 
     SellerResponse deleteSeller(Long sellerId);
+
+    SellerEntity getCurrentSeller();
+
+    SellerResponse updateCurrentSeller(SellerUpdateRequest sellerUpdateRequest);
 }
