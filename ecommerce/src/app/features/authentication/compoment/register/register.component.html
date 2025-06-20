@@ -1,0 +1,170 @@
+<div class="login-container">
+  <h2>Đăng ký</h2>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-content">
+    <div class="form-group">
+      <div class="input-container">
+        <input
+          type="text"
+          formControlName="username"
+          placeholder="Tên hiển thị"
+          [ngClass]="{'error': registerForm.get('username')?.touched && registerForm.get('username')?.invalid}"
+        />
+      </div>
+      <div class="error-message" *ngIf="getUsernameError()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        {{getUsernameError()}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-container">
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Email"
+          [ngClass]="{'error': registerForm.get('email')?.touched && registerForm.get('email')?.invalid}"
+        />
+      </div>
+      <div class="error-message" *ngIf="getEmailError()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        {{getEmailError()}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-container">
+        <input
+          type="text"
+          formControlName="phone"
+          placeholder="Số điện thoại"
+          [ngClass]="{'error': registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid}"
+        />
+      </div>
+      <div class="error-message" *ngIf="getPhoneError()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        {{getPhoneError()}}
+      </div>
+    </div>
+
+    <div class="form-group password-group">
+      <div class="input-container">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Mật khẩu"
+          (input)="updatePasswordStrength(registerForm.get('password')?.value)"
+          [ngClass]="{'error': registerForm.get('password')?.touched && registerForm.get('password')?.invalid}"
+        />
+        <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
+          <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="password-strength" *ngIf="registerForm.get('password')?.value">
+        <div class="strength-bar">
+          <div class="strength-fill" [style.width.%]="passwordStrength * 33.33" [style.background]="passwordStrengthColor"></div>
+        </div>
+        <span class="strength-text">{{ passwordStrengthText }}</span>
+      </div>
+      <div class="error-message" *ngIf="getPasswordError()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        {{getPasswordError()}}
+      </div>
+      <div class="password-requirements">
+        <h4>Yêu cầu mật khẩu:</h4>
+        <ul>
+          <li [class.valid]="registerForm.get('password')?.value.length >= 8">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            Ít nhất 8 ký tự
+          </li>
+          <li [class.valid]="checkUppercase(registerForm.get('password')?.value)">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            Có chữ hoa
+          </li>
+          <li [class.valid]="checkLowercase(registerForm.get('password')?.value)">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            Có chữ thường
+          </li>
+          <li [class.valid]="checkNumber(registerForm.get('password')?.value)">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            Có số
+          </li>
+          <li [class.valid]="checkSpecialChar(registerForm.get('password')?.value)">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            Có ký tự đặc biệt
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      {{errorMessage}}
+    </div>
+
+    <button
+      type="submit"
+      class="submit-btn"
+      [disabled]="isLoading"
+      [class.loading]="isLoading">
+      <div class="btn-content">
+        <svg *ngIf="isLoading" class="loading-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12a9 9 0 11-6.219-8.56"/>
+        </svg>
+        <span class="btn-text">{{isLoading ? 'Đang đăng ký...' : 'Đăng ký'}}</span>
+      </div>
+    </button>
+  </form>
+
+
+
+<!--  <div class="success-content" *ngIf="successMessage">-->
+<!--    <div class="success-icon">-->
+<!--      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--        <path d="M20 6L9 17l-5-5"/>-->
+<!--      </svg>-->
+<!--    </div>-->
+<!--    <div class="success-message">-->
+<!--      Đăng ký thành công!-->
+<!--    </div>-->
+<!--    <div class="success-message">-->
+<!--      Chúng tôi đã gửi email xác nhận đến <strong>{{registerForm.get('email')?.value}}</strong>-->
+<!--    </div>-->
+<!--    <div class="success-note">-->
+<!--      Vui lòng kiểm tra email (bao gồm cả thư mục spam) để kích hoạt tài khoản.-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <div class="login-link">
+    <div class="register-link">
+      <span>Nếu bạn đã có tài khoản, </span><a (click)="goToLogin()">đăng nhập</a>
+    </div>
+  </div>
+</div>
