@@ -37,7 +37,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse createUser(UserCreateRequest userCreateRequest) {
         try {
-
+            if (userCreateRequest.getPasswordHash() == null || userCreateRequest.getPasswordHash().trim().isEmpty()) {
+                throw new RuntimeException("Password cannot be empty");
+            }
+            
             UserEntity userEntity = userMapper.toEntity(userCreateRequest);
             userEntity.setPasswordHash(hashPassword.hashPassword(userCreateRequest.getPasswordHash()));
             userRepository.save(userEntity);

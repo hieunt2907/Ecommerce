@@ -1,10 +1,10 @@
 package com.shino.ecommerce.features.product.entity;
+
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
 
 import java.time.LocalDateTime;
 

@@ -1,20 +1,16 @@
 package com.shino.ecommerce.features.product.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-
 import com.shino.ecommerce.features.analystics.entity.ProductViewEntity;
 import com.shino.ecommerce.features.categories.entity.BrandEntity;
 import com.shino.ecommerce.features.categories.entity.CategoryEntity;
 import com.shino.ecommerce.features.review.entity.ReviewEntity;
-import com.shino.ecommerce.features.sellers.entity.SellerEntity;
-
-
+import com.shino.ecommerce.features.user.entity.UserEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +29,7 @@ public class ProductEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
-    private SellerEntity seller;
+    private UserEntity seller;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

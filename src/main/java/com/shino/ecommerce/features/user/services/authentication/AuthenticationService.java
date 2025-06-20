@@ -13,4 +13,5 @@ public interface AuthenticationService {
     AuthenticationResponse verifyResetPassword(OtpVerificationRequest otpVerificationRequest);
     AuthenticationResponse resetPassword(PasswordResetRequest request);
     AuthenticationResponse logout(HttpServletRequest request);
+    AuthenticationResponse resendOtp(String sessionId);
 }

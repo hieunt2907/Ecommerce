@@ -3,9 +3,7 @@ package com.shino.ecommerce.features.user.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shino.ecommerce.features.order.entity.OrderEntity;
 import com.shino.ecommerce.features.review.entity.ReviewEntity;
-import com.shino.ecommerce.features.sellers.entity.SellerEntity;
 import com.shino.ecommerce.features.user_address.entity.UserAddressEntity;
-import com.shino.ecommerce.features.wishlist.entity.WishlistEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -81,9 +79,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAddressEntity> addresses;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private SellerEntity seller;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -93,8 +88,5 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ReviewEntity> reviews;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<WishlistEntity> wishlists;
     
 }

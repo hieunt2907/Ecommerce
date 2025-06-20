@@ -38,11 +38,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse requestRegister(UserCreateRequest request) {
         try {
+            if (userRepository.existsByUsername(request.getUsername().toLowerCase())) {
+                throw new RuntimeException("Username already exists");
+            }
             if (userRepository.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("Email already exists");
-            }
-            if (userRepository.existsByUsername(request.getUsername())) {
-                throw new RuntimeException("Username already exists");
             }
             if (userRepository.existsByPhone(request.getPhone())) {
                 throw new RuntimeException("Phone number already exists");
@@ -87,9 +87,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             UserEntity user = null;
             if (request.getEmail() != null && !request.getEmail().isEmpty()) {
                 user = userRepository.findByEmail(request.getEmail());
-            } else if (request.getUsername() != null && !request.getUsername().isEmpty()) {
-                user = userRepository.findByUsername(request.getUsername());
             }
+
+//            else if (request.getUsername() != null && !request.getUsername().isEmpty()) {
+//                user = userRepository.findByUsername(request.getUsername());
+//            }
             if (user == null) {
                 throw new RuntimeException("User not found");
             }
@@ -210,4 +212,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new AuthenticationResponse(null, "Logout successfully");
     }
 
+    @Override
+    public AuthenticationResponse resendOtp(String sessionId) {
+        try {
+            String email = emailSessionUtil.getEmailFromSession(sessionId);
+            String otp = otpSend.generateOTP();
+            otpSend.saveOTP(email, otp);
+            EmailDTO emailDTO = new EmailDTO(email, "OTP resend", "Your OTP is: " + otp);
+            emailProducer.sendEmailAsync(emailDTO);
+            return new AuthenticationResponse(sessionId, "OTP resend successfully");
+        } catch (Exception e) {
+            throw new RuntimeException("Error resending OTP: " + e.getMessage(), e);
+        }
+    }
 }

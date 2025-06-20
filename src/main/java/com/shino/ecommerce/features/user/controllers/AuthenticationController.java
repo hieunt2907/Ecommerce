@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
@@ -62,5 +63,11 @@ public class AuthenticationController {
     @PostMapping("/logout")
     public ResponseEntity<AuthenticationResponse> logout(HttpServletRequest request) {
         return ResponseEntity.ok(authenticationService.logout(request));
+    }
+
+    @PostMapping("/resend-otp")
+    public ResponseEntity<AuthenticationResponse> resendOtp(
+            @RequestParam String sessionId) {
+        return ResponseEntity.ok(authenticationService.resendOtp(sessionId));
     }
 }

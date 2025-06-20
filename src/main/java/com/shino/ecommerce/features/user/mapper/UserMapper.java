@@ -20,10 +20,9 @@ public interface UserMapper {
     @Mapping(target = "isVerified", ignore = true)
     @Mapping(target = "orders", ignore = true)
     @Mapping(target = "reviews", ignore = true)
-    @Mapping(target = "seller", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "userId", ignore = true)
-    @Mapping(target = "wishlists", ignore = true)
+    @Mapping(target = "passwordHash", source = "passwordHash")
     UserEntity toEntity(UserCreateRequest userCreateRequest);
 
     @Mapping(target = "username", ignore = true)
@@ -34,10 +33,8 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "orders", ignore = true)
     @Mapping(target = "reviews", ignore = true)
-    @Mapping(target = "seller", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "userId", ignore = true)
-    @Mapping(target = "wishlists", ignore = true)
     UserEntity updateEntity(UserUpdateRequest userUpdateRequest, @MappingTarget UserEntity userEntity);
 
 }

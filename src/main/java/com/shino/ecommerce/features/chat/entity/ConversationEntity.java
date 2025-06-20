@@ -1,15 +1,12 @@
 package com.shino.ecommerce.features.chat.entity;
 
+import com.shino.ecommerce.features.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.shino.ecommerce.features.user.entity.UserEntity;
-import com.shino.ecommerce.features.sellers.entity.SellerEntity;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +28,7 @@ public class ConversationEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
-    private SellerEntity seller;
+    private UserEntity seller;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_message_id")
