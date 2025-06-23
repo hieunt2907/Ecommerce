@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserUpdateRequest {
     private String phone;
-    private String avartarUrl;
     private LocalDate dateOfBirth;
     private Gender gender;
     private Boolean isVerified;

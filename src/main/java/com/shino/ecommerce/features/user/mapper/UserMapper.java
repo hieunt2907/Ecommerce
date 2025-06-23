@@ -23,6 +23,7 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "passwordHash", source = "passwordHash")
+    @Mapping(target = "username", ignore = true)
     UserEntity toEntity(UserCreateRequest userCreateRequest);
 
     @Mapping(target = "username", ignore = true)

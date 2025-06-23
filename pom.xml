@@ -56,6 +56,7 @@
 			<scope>test</scope>
 		</dependency>
 
+
 		<!-- For handling multipart file uploads -->
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -136,6 +137,13 @@
 			<version>2.3.0</version>
 		</dependency>
 		<!-- Logback dependencies -->
+
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.39.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

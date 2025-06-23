@@ -7,7 +7,9 @@ import com.shino.ecommerce.features.user.dto.request.UserUpdateRequest;
 import com.shino.ecommerce.features.user.dto.response.AuthenticationResponse;
 import com.shino.ecommerce.features.user.dto.response.UserResponse;
 import com.shino.ecommerce.features.user.entity.UserEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -25,4 +27,5 @@ public interface UserService {
     UserResponse deleteUser(Long userId);
     UserResponse getCurrentUserProfile();
     UserResponse updateUserProfile(UserUpdateRequest userUpdateRequest);
+    UserResponse updateAvatar(MultipartFile file) throws IOException;
 }

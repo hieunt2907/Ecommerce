@@ -23,7 +23,7 @@ public class UserCreateRequest {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password must be at least 8 characters long and contain at least one letter, one number, and one special character.")
     private String passwordHash;
     private String phone;
-    private String avartarUrl;
+    private String avatarUrl;
     private LocalDate dateOfBirth;
     private Gender gender;
     private Set<RoleEntity> roles;

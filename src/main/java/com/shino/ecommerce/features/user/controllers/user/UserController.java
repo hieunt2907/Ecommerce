@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -92,6 +93,15 @@ public class UserController {
     public ResponseEntity<?> updateUserProfile(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         try {
             return ResponseEntity.ok(userservice.updateUserProfile(userUpdateRequest));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping ("/avatar")
+    public ResponseEntity<?> updateAvatar(@RequestPart("file") MultipartFile file) {
+        try {
+            return ResponseEntity.ok(userservice.updateAvatar(file));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

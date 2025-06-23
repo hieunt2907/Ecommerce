@@ -1,5 +1,7 @@
 package com.shino.ecommerce.features.user.services.user;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.shino.ecommerce.common.messaging.dto.EmailDTO;
 import com.shino.ecommerce.common.messaging.producer.EmailProducer;
 import com.shino.ecommerce.core.GetCurrentUser;
@@ -18,9 +20,12 @@ import com.shino.ecommerce.features.user.utils.OtpSend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final EmailProducer emailProducer;
     private final RedisTemplate<String, Boolean> redisBooleanTemplate;
     private final EmailSessionUtil emailSessionUtil;
+    private final Cloudinary cloudinary;
 
     @Override
     public UserResponse createUser(UserCreateRequest userCreateRequest) {
@@ -285,6 +291,22 @@ public class UserServiceImpl implements UserService {
             return new UserResponse(userEntity, "User profile update successful");
         } catch (Exception e) {
             throw new RuntimeException("Error update user profile: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public UserResponse updateAvatar(MultipartFile file) throws IOException {
+        try {
+            UserEntity userEntity = userRepository.findByUserId(getCurrentUser.getCurrentUserId());
+            Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                    ObjectUtils.asMap("resource_type", "auto"));
+            String avatarUrl = uploadResult.get("secure_url").toString();
+            userEntity.setAvatarUrl(avatarUrl);
+            userRepository.save(userEntity);
+            uploadResult.remove("secure_url");
+            return new UserResponse(userEntity, "Avatar update successful");
+        } catch (Exception e) {
+            throw new IOException("Error updating avatar: " + e.getMessage(), e);
         }
     }
 
