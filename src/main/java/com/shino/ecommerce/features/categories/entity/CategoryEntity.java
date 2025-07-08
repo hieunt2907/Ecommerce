@@ -1,5 +1,6 @@
 package com.shino.ecommerce.features.categories.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,10 +25,6 @@ public class CategoryEntity {
     @Column(name = "category_id")
     private Long categoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_category_id")
-    private CategoryEntity parentCategory;
-
     @Column(name = "category_name", nullable = false, length = 100)
     private String categoryName;
 
@@ -50,10 +47,7 @@ public class CategoryEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // Relationships
-    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
-    private List<CategoryEntity> subCategories;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<ProductEntity> products;
 }

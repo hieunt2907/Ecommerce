@@ -1,10 +1,8 @@
 package com.shino.ecommerce.features.product.entity;
 
-import com.shino.ecommerce.features.analystics.entity.ProductViewEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shino.ecommerce.features.categories.entity.BrandEntity;
 import com.shino.ecommerce.features.categories.entity.CategoryEntity;
-import com.shino.ecommerce.features.review.entity.ReviewEntity;
-import com.shino.ecommerce.features.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +11,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Entity
@@ -27,18 +24,17 @@ public class ProductEntity {
     @Column(name = "product_id")
     private Long productId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", nullable = false)
-    private UserEntity seller;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private BrandEntity brand;
 
+    // Basic Product Information
     @Column(name = "product_name", nullable = false)
     private String productName;
 
@@ -54,15 +50,69 @@ public class ProductEntity {
     @Column(unique = true, length = 100)
     private String sku;
 
+    // Pricing (simplified - single price)
+    @Column(nullable = false)
+    private Double price;
+
+    @Column(name = "compare_price")
+    private Double comparePrice;
+
+    @Column(name = "cost_price")
+    private Double costPrice;
+
+    // Stock Management
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity = 0;
+
+    // Product Specifications
     @Column(precision = 8)
     private Double weight;
 
     @Column(length = 50)
     private String dimensions;
 
+    @Column(length = 100)
+    private String barcode;
+
+    // Images (stored as JSON or comma-separated URLs)
+    @Column(name = "image_urls", columnDefinition = "TEXT")
+    private String imageUrls; // JSON array of image URLs
+
+    @Column(name = "primary_image_url")
+    private String primaryImageUrl;
+
+
+    // Status
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.ACTIVE;
 
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+//    // SEO and Marketing
+//    @Column(name = "meta_title")
+//    private String metaTitle;
+//
+//    @Column(name = "meta_description")
+//    private String metaDescription;
+//
+//    @Column(name = "tags")
+//    private String tags; // Comma-separated tags
+
+    // Analytics
+    @Column(name = "view_count")
+    private Integer viewCount = 0;
+
+    @Column(name = "purchase_count")
+    private Integer purchaseCount = 0;
+
+    @Column(name = "rating_average")
+    private Double ratingAverage = 0.0;
+
+    @Column(name = "rating_count")
+    private Integer ratingCount = 0;
+
+    // Timestamps
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -71,22 +121,7 @@ public class ProductEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Relationships
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductVariantEntity> variants;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductImageEntity> images;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductAttributeValueEntity> attributeValues;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ReviewEntity> reviews;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductViewEntity> views;
-
+    // Enums
     public enum ProductStatus {
         ACTIVE, INACTIVE, OUT_OF_STOCK, DISCONTINUED
     }

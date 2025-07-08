@@ -1,7 +1,6 @@
 package com.shino.ecommerce.features.order.entity;
 
 import com.shino.ecommerce.features.product.entity.ProductEntity;
-import com.shino.ecommerce.features.product.entity.ProductVariantEntity;
 import com.shino.ecommerce.features.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,16 +24,8 @@ public class OrderItemEntity {
     private OrderEntity order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", nullable = false)
-    private UserEntity seller;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variant_id")
-    private ProductVariantEntity variant;
 
     @Column(name = "product_name", nullable = false)
     private String productName;

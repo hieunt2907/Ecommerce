@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import com.shino.ecommerce.features.product.entity.ProductEntity;
-import com.shino.ecommerce.features.product.entity.ProductVariantEntity;
 
 
 @Entity
@@ -27,9 +26,6 @@ public class FlashSaleProductEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variant_id")
-    private ProductVariantEntity variant;
 
     @Column(name = "original_price", nullable = false)
     private Double originalPrice;

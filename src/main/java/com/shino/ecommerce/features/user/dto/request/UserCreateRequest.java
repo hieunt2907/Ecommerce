@@ -27,5 +27,4 @@ public class UserCreateRequest {
     private LocalDate dateOfBirth;
     private Gender gender;
     private Set<RoleEntity> roles;
-
 }

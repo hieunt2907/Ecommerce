@@ -1,4 +1,5 @@
 package com.shino.ecommerce.features.categories.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ public class BrandEntity {
     private LocalDateTime createdAt;
 
     // Relationships
+    @JsonIgnore
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     private List<ProductEntity> products;
 }

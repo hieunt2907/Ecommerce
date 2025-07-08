@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 import com.shino.ecommerce.features.product.entity.ProductEntity;
 
-import com.shino.ecommerce.features.product.entity.ProductVariantEntity;
-
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,9 +30,6 @@ public class CartItemEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variant_id")
-    private ProductVariantEntity variant;
 
     @Column(nullable = false)
     private Integer quantity = 1;
