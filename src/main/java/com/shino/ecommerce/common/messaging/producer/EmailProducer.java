@@ -40,7 +40,7 @@ public class EmailProducer {
 
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        
+
         mailSender.setHost(mailHost);
         mailSender.setPort(mailPort);
         mailSender.setUsername(mailUsername);
@@ -65,7 +65,7 @@ public class EmailProducer {
         message.setSubject(subject);
         message.setText(text);
         mailSender.send(message);
-    }    
+    }
 
     public void sendEmailAsync(EmailDTO emailMessage) {
         rabbitTemplate.convertAndSend(exchange, routingKey, emailMessage);
