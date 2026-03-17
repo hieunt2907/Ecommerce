@@ -15,7 +15,7 @@ public class EmailConsumer {
 
     @RabbitListener(queues = "${rabbitmq.queue.email}")
     public void consume(EmailDTO emailMessage) {
-        emailProducer.sendEmail(emailMessage.getTo(), emailMessage.getSubject(), emailMessage.getBody());
+        emailProducer.sendEmailAsync(emailMessage);
     }
     
 }
